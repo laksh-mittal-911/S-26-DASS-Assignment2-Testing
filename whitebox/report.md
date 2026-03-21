@@ -244,3 +244,15 @@
 
 **Logical Bugs Found & Fixed:**
 - **Bug 1 (ZeroDivisionError crashes)**: The original code for `cards_remaining()` and `__repr__()` used a modulo operator on `len(self.cards)` to calculate looping. `len(self.cards) - (self.index % len(self.cards))`. If a deck somehow ended up empty, `len` was 0, resulting in a literal math crash (`ZeroDivisionError: modulo by zero`). My empty deck test confirmed this crash immediately. I fixed it by adding a simple `if not self.cards: return 0` guard to both methods so they gracefully handle empty inputs instead of exploding.
+
+### Module: `board.py` (Coverage: 100% Branches)
+**Test Strategy:**
+- `test_board_initialization`: Verified the board successfully creates 8 colour groups and 22 standard properties exactly.
+- `test_board_get_property_at` & `test_board_get_tile_type`: Checked if specific board indexes return the correct tile names. For instance, I tested that index 12 (Electric Company in standard Monopoly) returns "blank" since this codebase doesn't support utilities yet.
+- `test_board_is_purchasable_logic`: Walked a property through purchase states, making sure Go (0) isn't purchasable, but normal properties are.
+- `test_board_is_special_tile`: Basic True/False flag checks for chance vs normal properties.
+- `test_board_ownership_queries`: simulated a player heavily buying properties and checked if `properties_owned_by` and `unowned_properties` counts properly inversely update (e.g. 2 bought means 20 unowned).
+- `test_board_repr`: Handled the textual representation branches to ensure 100% string execution.
+
+**Logical Bugs Found & Fixed:**
+- **Bug 1 (`is_purchasable` constraint failure)**: This method tells the engine if a property can be bought from the bank. It originally checked `if prop.owner is None`, but also had a secondary check: `if prop.is_mortgaged: return False`. This is a classic logical flaw perfectly matching the one I found in `property.py`. If the bank seizes a property that happens to still be mortgaged, nobody would *ever* be allowed to buy it again, which violates Monopoly rules (you can buy it and assume the mortgage). I deleted the redundant constraint, simplifying it to just `return prop.owner is None`.

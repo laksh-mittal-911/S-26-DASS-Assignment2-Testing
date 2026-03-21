@@ -102,12 +102,9 @@ class Board:
     def is_purchasable(self, position):
         """
         Return True if the tile at `position` is a property that can be bought.
-        Mortgaged properties are not considered purchasable.
         """
         prop = self.get_property_at(position)
         if prop is None:
-            return False
-        if prop.is_mortgaged:
             return False
         return prop.owner is None
 
