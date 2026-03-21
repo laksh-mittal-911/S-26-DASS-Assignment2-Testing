@@ -202,3 +202,20 @@
 
 **Logical Bugs Found & Fixed:**
 - **Bug 1 (`roll` method)**: The code was actually generating `random.randint(1, 5)` instead of a standard 6-sided die! My roll boundaries test immediately failed because it never saw a 6. I fixed it to `random.randint(1, 6)`.
+
+### Module: `player.py` (Coverage: 100% Branches)
+**Test Strategy:**
+- `test_player_starts_with_correct_defaults`: Simple check to make sure a naturally created player gets `STARTING_BALANCE` and isn't randomly in jail.
+- `test_player_adds_and_deducts_money_correctly`: Checked general math, and also verified that attempting to deduct negative money throws a ValueError (which it successfully does).
+- `test_player_bankruptcy`: Deducted all cash to trigger the bankruptcy flag.
+- `test_player_net_worth_includes_properties`: Created dummy properties (avoiding heavy mocks) and added them to the player to ensure `net_worth` calculates the sum of cash + assets.
+- `test_player_normal_move_no_go`: Standard movement check that avoids the Go square, verifying position updates and cash remains untouched.
+- `test_player_movement_and_passing_go`: Placed the player right before Go, forced a roll past it, and ensured they collected the $200 salary.
+- `test_player_landing_exactly_on_go`: Tested the exact match condition where the player lands perfectly on space 0.
+- `test_player_going_to_jail`: Confirmed the `go_to_jail` shortcut teleports the player to index 10 and sets the jail flag.
+- `test_player_add_and_remove_properties`: Manipulated the player's property array to test length checks and list removal safety.
+- `test_player_status_and_repr`: Grabbed the console output representations for 100% execution coverage.
+
+**Logical Bugs Found & Fixed:**
+- **Bug 1 (`net_worth` method)**: The code was literally just returning `self.balance`! In Monopoly, your net worth includes your assets. My test failed immediately (100 != 850). I fixed it by summing up the `price` of all owned properties alongside the cash balance constraint.
+- **Bug 2 (`move` method)**: The code strictly required players to land *exactly* on index `0` (`if self.position == 0:`) to get the $200 salary. I noticed this, wrote a test simulating passing Go (moving from 38 to 3), and it failed to award the cash. I fixed this by checking if the new position index is mathematically lower than the old position index (which means we wrapped around the board limit).
