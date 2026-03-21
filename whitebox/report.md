@@ -161,5 +161,19 @@
   - **Issue description**: A format error with excess blank lines at the end of the file.
   - **Fix applied**: Stripped extra newlines to conform to standard UNIX EOF (a single `\n`).
 
+### Iteration 9: ui.py (UI Module)
+- **Error 1: `C0114` (Missing module docstring)**
+  - **Location**: `moneypoly/ui.py:1:0`
+  - **Issue description**: The console user interface module had no top-level description.
+  - **Fix applied**: Added `"""UI module – handles user input and formatted console output."""`.
+- **Error 2: `W0702` (No exception type(s) specified)**
+  - **Location**: `moneypoly/ui.py:69:4`
+  - **Issue description**: The `safe_int_input` function utilized a bare `except:` block, catching all exceptions (including `SystemExit` or `KeyboardInterrupt`), which is a bad practice.
+  - **Fix applied**: Specified `except ValueError:`, correctly scoping the catch to integer casting failures exclusively.
+- **Error 3: `C0305` (Trailing newlines)**
+  - **Location**: `moneypoly/ui.py` at EOF
+  - **Issue description**: A format error with excess blank lines at the end of the file.
+  - **Fix applied**: Stripped extra newlines to conform to standard UNIX EOF.
+
 ## 1.3 White Box Test Cases
 *(Summary of coverage and logical bugs fixed)*
