@@ -176,4 +176,19 @@
   - **Fix applied**: Stripped extra newlines to conform to standard UNIX EOF.
 
 ## 1.3 White Box Test Cases
-*(Summary of coverage and logical bugs fixed)*
+
+### Module: `bank.py` (Coverage: 100% Branches)
+**Test Strategy:**
+- `test_bank_initialization`: Verifies the bank starts with correct funds (`BANK_STARTING_FUNDS`) and zero loans.
+- `test_bank_collect_positive`: Ensures collecting funds strictly adds to balance and `_total_collected`.
+- `test_bank_collect_negative_ignored`: Tests that negative values passed to `collect` do not alter the balance (edge case).
+- `test_bank_pay_out_normal`: Verifies regular payouts decrement bank reserves correctly.
+- `test_bank_pay_out_negative_or_zero`: Edge cases verifying zero and negative payouts safely return 0.
+- `test_bank_pay_out_insufficient_funds`: Ensures a `ValueError` is correctly raised when payouts exceed bank reserves.
+- `test_bank_give_loan_normal`: Checks that loans correctly trigger the player's `add_money` method and decrement bank reserves.
+- `test_bank_give_loan_zero_or_negative`: Ensures zero or negative loan requests are cleanly ignored without impacting state.
+- `test_bank_summary`: Captures stdout to ensure the ledger prints properly.
+
+**Logical Bugs Found & Fixed:**
+- **Bug 1 (`collect` method)**: The code failed to enforce its own rule ("Negative amounts are silently ignored"), blindly subtracting funds when negative numbers were passed. Fixed by prepending `if amount <= 0: return`.
+- **Bug 2 (`give_loan` method)**: The code failed to deduct the loan amount from the bank's own internal cash reserves (`self._funds`), creating money out of thin air. Fixed by adding `self._funds -= amount`.
