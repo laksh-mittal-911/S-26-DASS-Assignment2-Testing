@@ -233,3 +233,14 @@
 **Logical Bugs Found & Fixed:**
 - **Bug 1 (`all_owned_by` in PropertyGroup)**: This function determines if someone owns a monopoly to double their rent. The original code used `any(...)`, which meant if a player owned just ONE property in a color group, their rent doubled! I wrote a test explicitly assigning 2/3 properties to Alice and the test actually failed because her rent doubled. I fixed it by changing `any()` to `all()`.
 - **Bug 2 (`is_available` in Property)**: This checks if a player can buy a property from the bank. The code checked `self.owner is None and not self.is_mortgaged`. The `not self.is_mortgaged` check is completely redundant and breaks edge cases (e.g. if the bank repossesses a mortgaged property, it stays unbuyable forever). I removed it and just kept `return self.owner is None`, solving the logic flaw.
+
+### Module: `cards.py` (Coverage: 100% Branches)
+**Test Strategy:**
+- `test_cards_loaded_correctly`: Quick sanity check just to make sure the global lists of Chance and Community Chest cards aren't mysteriously empty.
+- `test_deck_initialization`: Verified that making a deck correctly stores the length and remaining cards.
+- `test_deck_draw_and_peek`: Made a tiny fake deck of two cards. Tested `peek()` to ensure it doesn't advance the deck, and then `draw()` to ensure it pulls them sequentially. Also tested that drawing past the end correctly loops back to the start!
+- `test_deck_reshuffle`: Walked halfway through a deck, called `reshuffle()`, and made sure the index reset to 0 so the whole deck became available again.
+- `test_deck_empty_deck_crash_bugs`: Intentionally initialized `CardDeck([])` with zero cards inside to see if the game would crash.
+
+**Logical Bugs Found & Fixed:**
+- **Bug 1 (ZeroDivisionError crashes)**: The original code for `cards_remaining()` and `__repr__()` used a modulo operator on `len(self.cards)` to calculate looping. `len(self.cards) - (self.index % len(self.cards))`. If a deck somehow ended up empty, `len` was 0, resulting in a literal math crash (`ZeroDivisionError: modulo by zero`). My empty deck test confirmed this crash immediately. I fixed it by adding a simple `if not self.cards: return 0` guard to both methods so they gracefully handle empty inputs instead of exploding.
