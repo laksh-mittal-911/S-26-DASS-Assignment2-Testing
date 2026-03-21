@@ -53,5 +53,23 @@
   - **Issue description**: The configuration file containing the game's constants lacked a top-level docstring summarizing its contents.
   - **Fix applied**: Added `"""Config module – contains all constant values and game configuration settings."""` at the beginning of the file.
 
+### Iteration 5: dice.py (Dice Module)
+- **Error 1: `C0114` (Missing module docstring)**
+  - **Location**: `moneypoly/dice.py:1:0`
+  - **Issue description**: The dice simulation file lacked a top-level docstring summarizing its contents.
+  - **Fix applied**: Added `"""Dice module – simulates dice rolls, tracking values and doubles."""` at the beginning of the file.
+- **Error 2: `W0611` (Unused import `BOARD_SIZE`)**
+  - **Location**: `moneypoly/dice.py:2:0`
+  - **Issue description**: The `BOARD_SIZE` constant was imported from `moneypoly.config` but was never used in the module.
+  - **Fix applied**: Removed the unused import line entirely. Since it was the only thing imported, the whole `from moneypoly.config import...` statement was removed.
+- **Error 3: `W0201` (Attribute defined outside `__init__`)**
+  - **Location**: `moneypoly/dice.py:25:12`
+  - **Issue description**: Pylint detected that `self.doubles_streak` was being assigned within the `reset()` and `roll()` methods, but it was not present directly inside the `__init__` constructor. For predictability and maintainability, all instance variables should be explicitly defined in `__init__`.
+  - **Fix applied**: Added `self.doubles_streak = 0` inside the `__init__` method, prior to calling `self.reset()`.
+- **Error 4: `E0401` (Unable to import)**
+  - **Location**: `moneypoly/dice.py:2:0`
+  - **Issue description**: Pylint raised an import error because it incorrectly analyzes internal codebase structure.
+  - **Fix applied**: Added the global suppression flag `# pylint: disable=import-error` at the top of the file as per allowed rules.
+
 ## 1.3 White Box Test Cases
 *(Summary of coverage and logical bugs fixed)*
