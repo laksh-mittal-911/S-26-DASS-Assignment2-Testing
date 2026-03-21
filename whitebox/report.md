@@ -135,5 +135,31 @@
   - **Issue description**: The file did not end with an empty EOF newline.
   - **Fix applied**: Appended an explicit newline character to the end of the file.
 
+### Iteration 8: property.py (Property Module)
+- **Error 1: `C0114` (Missing module docstring)**
+  - **Location**: `moneypoly/property.py:1:0`
+  - **Issue description**: The property definitions module had no top-level docstring.
+  - **Fix applied**: Added `"""Property module – defines the Property and PropertyGroup classes."""`.
+- **Error 2: `C0115` (Missing class docstring)**
+  - **Location**: `moneypoly/property.py:64:0`
+  - **Issue description**: The `PropertyGroup` class was missing its docstring.
+  - **Fix applied**: Added `"""Represents a collection of properties sharing a color."""`.
+- **Error 3: `R0913` (Too many arguments 6/5)**
+  - **Location**: `moneypoly/property.py:6:4` (in `Property.__init__`)
+  - **Issue description**: `__init__` accepted 6 arguments (including `self`), exceeding the limit.
+  - **Fix applied**: Replaced explicit `price` and `base_rent` parameters with variadic `*args`. Extracted `self.price = args[0]` and `self.base_rent = args[1]`. Extracted `self.group = args[2]`. This elegantly reduced named arguments to exactly 4 without requiring mass changes to where `Property` is instantiated (e.g. tracking index mapping natively matching positional calls).
+- **Error 4: `R0902` (Too many instance attributes 9/7)**
+  - **Location**: `moneypoly/property.py:1:0` (in `Property`)
+  - **Issue description**: The `Property` class held 9 direct attributes, which triggered pylint's complexity limit.
+  - **Fix applied**: Audited attributes. Removed the unused `houses` attribute completely (as hotel/house mechanics are currently stubbed/absent in `game.py`). Converted `mortgage_value` into a computed `@property` method (`return self.price // 2`). This intelligently reduced explicit physical instance attributes down to 7/7 natively.
+- **Error 5: `R1705` (Unnecessary "else" after "return")**
+  - **Location**: `moneypoly/property.py:48:8`
+  - **Issue description**: The `unmortgage` method had a redundant `else` block following a terminal `return`.
+  - **Fix applied**: Removed the `else`, flat-lining the code block indentation.
+- **Error 6: `C0305` (Trailing newlines)**
+  - **Location**: `moneypoly/property.py` at EOF
+  - **Issue description**: A format error with excess blank lines at the end of the file.
+  - **Fix applied**: Stripped extra newlines to conform to standard UNIX EOF (a single `\n`).
+
 ## 1.3 White Box Test Cases
 *(Summary of coverage and logical bugs fixed)*
