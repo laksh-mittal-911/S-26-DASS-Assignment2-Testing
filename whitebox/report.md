@@ -192,3 +192,13 @@
 **Logical Bugs Found & Fixed:**
 - **Bug 1 (`collect` method)**: The code failed to enforce its own rule ("Negative amounts are silently ignored"), blindly subtracting funds when negative numbers were passed. Fixed by prepending `if amount <= 0: return`.
 - **Bug 2 (`give_loan` method)**: The code failed to deduct the loan amount from the bank's own internal cash reserves (`self._funds`), creating money out of thin air. Fixed by adding `self._funds -= amount`.
+
+### Module: `dice.py` (Coverage: 100% Branches)
+**Test Strategy:**
+- `test_dice_initial_state`: Just checking that when you create the dice, everything starts at 0.
+- `test_dice_roll_boundaries`: I rolled the dice 100 times to guarantee that both dice only generate numbers from 1 to 6. If they ever generated something else, the test would fail.
+- `test_dice_handles_doubles`: Used a simple mock to force both dice to roll a 4. verified that the streak counter goes up to 1 and the string says "(DOUBLES)".
+- `test_dice_resets_streak_on_non_doubles`: Forced the dice to roll a 2 and a 3. Made sure that the previous double streak got completely erased back to 0.
+
+**Logical Bugs Found & Fixed:**
+- **Bug 1 (`roll` method)**: The code was actually generating `random.randint(1, 5)` instead of a standard 6-sided die! My roll boundaries test immediately failed because it never saw a 6. I fixed it to `random.randint(1, 6)`.
