@@ -1,8 +1,10 @@
-import math
+"""Bank module – manages the central bank's funds, loans, and payouts."""
+# pylint: disable=import-error
 from moneypoly.config import BANK_STARTING_FUNDS
 
 
 class Bank:
+    """Central bank that holds reserves, issues loans, and processes payments."""
     def __init__(self):
         self._funds = BANK_STARTING_FUNDS
         self._loans_issued = []
