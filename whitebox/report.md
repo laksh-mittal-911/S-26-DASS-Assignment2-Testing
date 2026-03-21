@@ -47,5 +47,11 @@
   - **Issue description**: Pylint enforces a strict 100-character line length limit (PEP 8 standard). The lists `CHANCE_CARDS` and `COMMUNITY_CHEST_CARDS` contained dictionary entries stretched out horizontally, exceeding 111+ characters per line. This reduces readability.
   - **Fix applied**: Refactored the single-line dictionaries into multi-line formatted dictionaries. Each key (`description`, `action`, `value`) was moved to a separate indented newline, making the code 100% compliant with the 100-character limit while radically improving legibility.
 
+### Iteration 4: config.py (Config Module)
+- **Error 1: `C0114` (Missing module docstring)**
+  - **Location**: `moneypoly/config.py:1:0`
+  - **Issue description**: The configuration file containing the game's constants lacked a top-level docstring summarizing its contents.
+  - **Fix applied**: Added `"""Config module – contains all constant values and game configuration settings."""` at the beginning of the file.
+
 ## 1.3 White Box Test Cases
 *(Summary of coverage and logical bugs fixed)*
