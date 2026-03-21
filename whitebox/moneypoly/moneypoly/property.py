@@ -59,7 +59,7 @@ class Property:
 
     def is_available(self):
         """Return True if this property can be purchased (unowned, not mortgaged)."""
-        return self.owner is None and not self.is_mortgaged
+        return self.owner is None
 
     def __repr__(self):
         owner_name = self.owner.name if self.owner else "unowned"
@@ -84,7 +84,7 @@ class PropertyGroup:
         """Return True if every property in this group is owned by `player`."""
         if player is None:
             return False
-        return any(p.owner == player for p in self.properties)
+        return all(p.owner == player for p in self.properties)
 
     def get_owner_counts(self):
         """Return a dict mapping each owner to how many properties they hold in this group."""

@@ -219,3 +219,17 @@
 **Logical Bugs Found & Fixed:**
 - **Bug 1 (`net_worth` method)**: The code was literally just returning `self.balance`! In Monopoly, your net worth includes your assets. My test failed immediately (100 != 850). I fixed it by summing up the `price` of all owned properties alongside the cash balance constraint.
 - **Bug 2 (`move` method)**: The code strictly required players to land *exactly* on index `0` (`if self.position == 0:`) to get the $200 salary. I noticed this, wrote a test simulating passing Go (moving from 38 to 3), and it failed to award the cash. I fixed this by checking if the new position index is mathematically lower than the old position index (which means we wrapped around the board limit).
+
+### Module: `property.py` (Coverage: 100% Branches)
+**Test Strategy:**
+- `test_property_initialization`: Verified the basic setup of a property instance.
+- `test_property_rent_mechanics`: Ensured normal rent is charged, and importantly, that mortgaged properties charge 0 rent.
+- `test_property_group_monopoly_rent_bug`: Grouped three properties together, assigned two to Alice and one to Bob. Checked if Alice's rent doubled (it shouldn't, because Bob owns the third property). Then gave Alice the third property and verified the rent successfully doubled.
+- `test_property_group_all_owned_by_none`: Checked an edge case to ensure the bank (None) doesn't magically trigger monopoly rent rules.
+- `test_property_mortgage_logic`: Verified the math for mortgaging (getting half price) and unmortgaging (paying back the mortgage + 10%). Also tested edge cases like trying to mortgage an already mortgaged property.
+- `test_property_is_available`: Walked a property through its lifecycle: unowned (available) -> owned (unavailable) -> mortgaged by owner (still unavailable) -> repossessed by bank (available again).
+- `test_property_group_utilities` & `test_property_group_owner_counts`: Tested the Group class's size and owner counting mechanisms, purposefully using 3 properties (where 1 was unowned) to hit every possible conditional branch.
+
+**Logical Bugs Found & Fixed:**
+- **Bug 1 (`all_owned_by` in PropertyGroup)**: This function determines if someone owns a monopoly to double their rent. The original code used `any(...)`, which meant if a player owned just ONE property in a color group, their rent doubled! I wrote a test explicitly assigning 2/3 properties to Alice and the test actually failed because her rent doubled. I fixed it by changing `any()` to `all()`.
+- **Bug 2 (`is_available` in Property)**: This checks if a player can buy a property from the bank. The code checked `self.owner is None and not self.is_mortgaged`. The `not self.is_mortgaged` check is completely redundant and breaks edge cases (e.g. if the bank repossesses a mortgaged property, it stays unbuyable forever). I removed it and just kept `return self.owner is None`, solving the logic flaw.
