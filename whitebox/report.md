@@ -71,5 +71,43 @@
   - **Issue description**: Pylint raised an import error because it incorrectly analyzes internal codebase structure.
   - **Fix applied**: Added the global suppression flag `# pylint: disable=import-error` at the top of the file as per allowed rules.
 
+### Iteration 6: game.py (Game Module)
+- **Error 1: `C0114` (Missing module docstring)**
+  - **Location**: `moneypoly/game.py:1:0`
+  - **Issue description**: The core loop and state management file was missing its high-level docstring.
+  - **Fix applied**: Inserted `"""Game module – manages the Monopoly game state and main loop."""` at line 1.
+- **Error 2: `R0902` (Too many instance attributes 9/7)**
+  - **Location**: `moneypoly/game.py:20:0` (in `Game.__init__`)
+  - **Issue description**: The class contained nine direct attributes, exceeding the recommended limit of seven. This makes the class too complex and indicates missing abstractions.
+  - **Fix applied**: Bundled `chance_deck` and `community_deck` into a single `self.decks` dictionary. Similarly bundled `current_index`, `turn_number`, and `running` into a `self.state` dictionary. Updated all corresponding references throughout the file. This reduced instance attributes to just five.
+- **Error 3: `R0912` (Too many branches 15/12)**
+  - **Location**: `moneypoly/game.py:295:4` (in `_apply_card`)
+  - **Issue description**: The `_apply_card` function employed a massive `if-elif` chain (15 branches total counting nested conditionals) to route card actions, causing high cyclomatic complexity.
+  - **Fix applied**: Extracted the card handler logic. Decomposed the giant block into 7 specific methods (`_card_collect`, `_card_pay`, `_card_jail`, `_card_jail_free`, `_card_move_to`, `_card_birthday`, `_card_collect_from_all`) and mapped them inside a `handlers` dictionary, dramatically simplifying `_apply_card`.
+- **Error 4 & 5: `C0325` (Unnecessary parens)**
+  - **Location**: `moneypoly/game.py:453:0` and `462:0`
+  - **Issue description**: The statements `if not (0 <= idx < len(others)):` contained redundant outer parentheses.
+  - **Fix applied**: Restructured to Pythonic syntax `if not 0 <= idx < len(others):`.
+- **Error 6: `R1723` (Unnecessary "elif" after "break")**
+  - **Location**: `moneypoly/game.py:402:12`
+  - **Issue description**: In the interactive menu block, a leading `if` executed a `break`. Directly following was an `elif`, which is conceptually redundant.
+  - **Fix applied**: Stripped the leading `el` to leave `if choice == 1:`, decoupling it optimally.
+- **Error 7: `W1309` (f-string without interpolation)**
+  - **Location**: `moneypoly/game.py:381:28`
+  - **Issue description**: The string `f"GAME OVER"` contained an `f` prefix but didn't actually embed any variables.
+  - **Fix applied**: Changed to a normal string literal `"GAME OVER"`.
+- **Error 8 & 9: `W0611` (Unused imports)**
+  - **Location**: `moneypoly/game.py:1:0` (`os`) and `3:0` (`GO_TO_JAIL_POSITION`)
+  - **Issue description**: Modules fetched but not utilized waste namespace space.
+  - **Fix applied**: Entirely purged the unused `import os` and removed the `GO_TO_JAIL_POSITION` variable from the config import block.
+- **Error 10: `C0304` (Final newline missing)**
+  - **Location**: `moneypoly/game.py:468:0`
+  - **Issue description**: A basic formatting requirement indicating EOF without a trailing newline.
+  - **Fix applied**: Appended an empty trailing newline to the end of the file.
+- **Error 11-17: `E0401` (Unable to import)**
+  - **Location**: `moneypoly/game.py:3:0` onwards
+  - **Issue description**: Pylint parsing flaws for sibling/internal module imports.
+  - **Fix applied**: Suppressed globally with `# pylint: disable=import-error`.
+
 ## 1.3 White Box Test Cases
 *(Summary of coverage and logical bugs fixed)*
