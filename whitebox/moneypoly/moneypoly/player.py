@@ -1,4 +1,5 @@
-import sys
+"""Player module – defines the Player class and their state within the game."""
+# pylint: disable=import-error
 from moneypoly.config import STARTING_BALANCE, BOARD_SIZE, GO_SALARY, JAIL_POSITION
 
 
@@ -13,8 +14,6 @@ class Player:
         self.in_jail = False
         self.jail_turns = 0
         self.get_out_of_jail_cards = 0
-        self.is_eliminated = False
-
 
     def add_money(self, amount):
         """Add funds to this player's balance. Amount must be non-negative."""
@@ -42,7 +41,6 @@ class Player:
         Awards the Go salary if the player passes or lands on Go.
         Returns the new board position.
         """
-        old_position = self.position
         self.position = (self.position + steps) % BOARD_SIZE
 
         if self.position == 0:
@@ -84,4 +82,4 @@ class Player:
         )
 
     def __repr__(self):
-        return f"Player({self.name!r}, balance={self.balance}, pos={self.position})"
+        return f"Player({self.name!r}, balance={self.balance}, pos={self.position})\n"

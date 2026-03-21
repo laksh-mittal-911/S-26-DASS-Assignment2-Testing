@@ -109,5 +109,31 @@
   - **Issue description**: Pylint parsing flaws for sibling/internal module imports.
   - **Fix applied**: Suppressed globally with `# pylint: disable=import-error`.
 
+### Iteration 7: player.py (Player Module)
+- **Error 1: `C0114` (Missing module docstring)**
+  - **Location**: `moneypoly/player.py:1:0`
+  - **Issue description**: The player module had no top-level docstring to explain its intent.
+  - **Fix applied**: Inserted `"""Player module – defines the Player class and their state within the game."""`.
+- **Error 2: `R0902` (Too many instance attributes 8/7)**
+  - **Location**: `moneypoly/player.py:5:0` (in `Player.__init__`)
+  - **Issue description**: The `Player` class held 8 attributes, which triggered pylint's complexity limit.
+  - **Fix applied**: Audited the attributes and found that `is_eliminated` was completely redundant (a player's active status is fully determined by their presence in `game.players`). Removed `is_eliminated` from `player.py` and deleted the dead-code assignment (`player.is_eliminated = True`) from `game.py`. This brought the instance attribute count down to the strictly compliant 7.
+- **Error 3: `E0401` (Unable to import `moneypoly.config`)**
+  - **Location**: `moneypoly/player.py:2:0`
+  - **Issue description**: Pylint parsing flaws for internal module imports.
+  - **Fix applied**: Suppressed globally with `# pylint: disable=import-error`.
+- **Error 4: `W0611` (Unused import `sys`)**
+  - **Location**: `moneypoly/player.py:1:0`
+  - **Issue description**: The `sys` package was imported but never used.
+  - **Fix applied**: Removed the unused import line.
+- **Error 5: `W0612` (Unused variable `old_position`)**
+  - **Location**: `moneypoly/player.py:45:8`
+  - **Issue description**: The `old_position = self.position` variable was assigned but never used later in the `move()` method.
+  - **Fix applied**: Removed the variable assignment.
+- **Error 6: `C0304` (Final newline missing)**
+  - **Location**: `moneypoly/player.py:87:0`
+  - **Issue description**: The file did not end with an empty EOF newline.
+  - **Fix applied**: Appended an explicit newline character to the end of the file.
+
 ## 1.3 White Box Test Cases
 *(Summary of coverage and logical bugs fixed)*
