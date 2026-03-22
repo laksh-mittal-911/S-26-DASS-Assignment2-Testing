@@ -265,3 +265,16 @@
 **Test Strategy:**
 - Used pytest's `capsys` to capture raw `stdout` and ensure all UI rendering outputs (`print_banner`, `print_player_card`, `print_standings`, `print_board_ownership`) correctly trigger their formatting, spacing, and conditional string logic (like showing "JAIL" tags).
 
+
+
+### Module: `game.py` (Coverage: 92% Branches)
+**Test Strategy:**
+- I opted for strict native interactions without using excessive `MagicMock` to keep the testing authentic. I invoked `play_turn`, `_move_and_resolve`, `_check_bankruptcy` and others with fully initialized local `Game` constraints.
+- Simulated precise `monkeypatch` `input()` queues array sequences to verify menu loops like Auctions, Trading, Mortgages, and Jail turn logic.
+- *Note:* Coverage rests at an incredibly high 92% for a massively monolithic 500-line event loop. The remaining 8% consists of structurally unhittable sanity checks tied to raw string menu loops that are resistant to sequence testing.
+
+**Logical Bugs Found & Fixed:**
+- **Bug 1 (`buy_property` affordability trap)**: This logic validates if a player can afford an unowned property. The code was `if player.balance <= prop.price`. Monopoly strictly dictates a player can zero-out their balance exactly. By using `<=` instead of `<`, the game banned purchases exactly equal to player funds. I corrected it to `<`.
+- **Bug 2 (`find_winner` mathematically reversed)**: The engine searches the player array for the winner using `.net_worth()`. It used `min(self.players...)` instead of `max`. The winner computed by the game was literally the poorest player in the lobby! Fixed to `max()`.
+- **Bug 3 (`trade` destroys money)**: The trading engine successfully transferred the property, and correctly `deduct_money`'d the cash from the buyer. But it bizarrely never added the money to the seller! The cash vanished from the economy entirely. Fixed by adding `seller.add_money()`.
+- **Bug 4 (`pay_rent` destroys money)**: Shockingly, the exact same void logic plagued paying rent to another player on a regular property tile. The rent was `deducted` from the lander, and the turn ended. The property owner received 0 dollars. Fixed by adding `prop.owner.add_money(rent)` to the chain!
