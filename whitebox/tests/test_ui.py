@@ -2,6 +2,8 @@ import pytest
 from moneypoly import ui
 from moneypoly.player import Player
 from moneypoly.property import Property
+import importlib
+importlib.reload(ui)
 
 def test_print_banner(capsys):
     ui.print_banner("Test Title")
@@ -65,11 +67,12 @@ def test_format_currency():
     assert ui.format_currency(-50) == "$-50"
 
 def test_safe_int_input(monkeypatch):
-    # Simulate valid input
+    # 1. Simulate valid input
     monkeypatch.setattr('builtins.input', lambda _: "42")
     assert ui.safe_int_input("Test: ") == 42
     
-    # Simulate invalid input, should return default
+    # 2. Simulate invalid input, should trigger ValueError and return default (99)
+    # This hits the 'except ValueError:' branch in ui.py
     monkeypatch.setattr('builtins.input', lambda _: "not_a_number")
     assert ui.safe_int_input("Test: ", default=99) == 99
 
