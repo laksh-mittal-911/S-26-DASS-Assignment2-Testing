@@ -256,3 +256,7 @@
 
 **Logical Bugs Found & Fixed:**
 - **Bug 1 (`is_purchasable` constraint failure)**: This method tells the engine if a property can be bought from the bank. It originally checked `if prop.owner is None`, but also had a secondary check: `if prop.is_mortgaged: return False`. This is a classic logical flaw perfectly matching the one I found in `property.py`. If the bank seizes a property that happens to still be mortgaged, nobody would *ever* be allowed to buy it again, which violates Monopoly rules (you can buy it and assume the mortgage). I deleted the redundant constraint, simplifying it to just `return prop.owner is None`.
+
+### Module: `config.py` (Coverage: 100% Branches)
+**Test Strategy:**
+- `test_config_constants`: A core validation check against defined game constants to catch unexpected changes against `JAIL_POSITION`, `MAX_TURNS`, or tax constraints.
