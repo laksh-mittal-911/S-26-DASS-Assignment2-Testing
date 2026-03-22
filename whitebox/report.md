@@ -260,3 +260,8 @@
 ### Module: `config.py` (Coverage: 100% Branches)
 **Test Strategy:**
 - `test_config_constants`: A core validation check against defined game constants to catch unexpected changes against `JAIL_POSITION`, `MAX_TURNS`, or tax constraints.
+
+### Module: `ui.py` (Coverage: 100% Branches)
+**Test Strategy:**
+- Used pytest's `capsys` to capture raw `stdout` and ensure all UI rendering outputs (`print_banner`, `print_player_card`, `print_standings`, `print_board_ownership`) correctly trigger their formatting, spacing, and conditional string logic (like showing "JAIL" tags).
+
