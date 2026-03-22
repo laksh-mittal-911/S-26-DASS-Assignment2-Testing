@@ -6,8 +6,9 @@ class CrewMember:
         self.member_id: str = str(uuid.uuid4())
         self.name: str = name
         self.role: str = role
-        # Deep stats (stamina, skill, repair_speed, etc.) will be managed by crew_management.py
-        self.stats: dict = {}
+        self.base_stamina: int = 100
+        self.morale: int = 100
+        self.status: str = 'AVAILABLE'
 
     def __str__(self) -> str:
         return f"[{self.member_id[:8]}] {self.name} - Role: {self.role}"
