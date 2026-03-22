@@ -267,11 +267,11 @@
 
 
 
-### Module: `game.py` (Coverage: 92% Branches)
+### Module: `game.py` (Coverage: 97% Branches)
 **Test Strategy:**
 - I opted for strict native interactions without using excessive `MagicMock` to keep the testing authentic. I invoked `play_turn`, `_move_and_resolve`, `_check_bankruptcy` and others with fully initialized local `Game` constraints.
 - Simulated precise `monkeypatch` `input()` queues array sequences to verify menu loops like Auctions, Trading, Mortgages, and Jail turn logic.
-- *Note:* Coverage rests at an incredibly high 92% for a massively monolithic 500-line event loop. The remaining 8% consists of structurally unhittable sanity checks tied to raw string menu loops that are resistant to sequence testing.
+
 
 **Logical Bugs Found & Fixed:**
 - **Bug 1 (`buy_property` affordability trap)**: This logic validates if a player can afford an unowned property. The code was `if player.balance <= prop.price`. Monopoly strictly dictates a player can zero-out their balance exactly. By using `<=` instead of `<`, the game banned purchases exactly equal to player funds. I corrected it to `<`.
