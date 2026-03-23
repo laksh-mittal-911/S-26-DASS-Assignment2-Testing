@@ -3,6 +3,9 @@
 **Author:** Laksh Mittal  
 **Roll Number:** 2024113003  
 
+**Link to OneDrive Folder:** 
+**Link to Github Repository:** https://github.com/laksh-mittal-911/S-26-DASS-Assignment2-Testing
+
 ---
 
 ## Overview
@@ -139,9 +142,6 @@ Performed black-box QA testing on a Dockerized REST API.
 - requests
 - pylint
 - Docker (for Task 3)
-
-### Install Dependencies
-    pip install -r requirements.txt
 
 ---
 
